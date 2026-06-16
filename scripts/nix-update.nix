@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  baseUrl = "https://raw.githubusercontent.com/not-a-longneck/NixOS-VCVM/main";
+  baseUrl = "https://raw.githubusercontent.com/not-a-longneck/nix-update/main";
   configDir = "/etc/nixos";
   
   # Add any new files you want to track here (relative to /etc/nixos/)
