@@ -37,6 +37,7 @@ sudo nano /etc/nixos/configuration.nix
 
 ```bash
 # Paste your scripts/nix-update.nix file content here
+sudo mkdir /etc/nixos/scripts/
 sudo nano /etc/nixos/scripts/nix-update.nix
 ```
 
