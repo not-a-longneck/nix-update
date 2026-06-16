@@ -24,7 +24,8 @@ flatpak install flathub -y \
   org.signal.Signal \
   com.valvesoftware.Steam \
   com.obsproject.Studio \
-  com.github.tchx84.Flatseal
+  com.github.tchx84.Flatseal \
+  com.vscodium.codium
 ```
 
 ---
