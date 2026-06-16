@@ -31,14 +31,9 @@ sudo mkdir -p /etc/nixos/scripts
 Copy-paste your configurations from your repository directly into the matching target locations:
 
 ```bash
-# Paste your updated configuration.nix content here
-sudo nano /etc/nixos/configuration.nix
-```
-
-```bash
-# Paste your scripts/nix-update.nix file content here
 sudo mkdir /etc/nixos/scripts/
-sudo nano /etc/nixos/scripts/nix-update.nix
+sudo curl -sSL -o /etc/nixos/configuration.nix [https://raw.githubusercontent.com/not-a-longneck/nix-update/main/configuration.nix](https://raw.githubusercontent.com/not-a-longneck/nix-update/main/configuration.nix)
+sudo curl -sSL -o /etc/nixos/scripts/nix-update.nix [https://raw.githubusercontent.com/not-a-longneck/nix-update/main/scripts/nix-update.nix](https://raw.githubusercontent.com/not-a-longneck/nix-update/main/scripts/nix-update.nix)
 ```
 
 ### 3. Compile and Switch Generations
