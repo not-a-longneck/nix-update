@@ -41,7 +41,12 @@ Follow these quick manual steps inside the `virt-manager` GUI to provision your 
 
 ## ✏️ Espanso
 
-To bind local hotkeys and expansion modules, follow the official Linux installation documentation:
+Espanso is installed via config file. Run:
+
+```
+espanso service register
+espanso start
+```
 
 👉 https://espanso.org/docs/install/linux
 
