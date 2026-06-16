@@ -72,3 +72,11 @@ sudo systemctl stop coolercontrold && sudo tar -xzvf /home/backups/coolercontrol
 
 ---
 
+## 🛜 Bluetooth
+
+Backup bluetooth settings:
+`sudo tar -czvf /home/backups/bluetooth_backup.tar.gz -C / var/lib/bluetooth/`
+
+Restore bluetooth:
+`sudo systemctl stop bluetooth && sudo tar -xzvf /home/backups/bluetooth_backup.tar.gz -C / && sudo systemctl start bluetooth`
+
