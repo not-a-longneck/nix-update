@@ -85,40 +85,6 @@ Restore bluetooth:
 sudo systemctl stop bluetooth && sudo tar -xzvf /home/backups/bluetooth_backup.tar.gz -C / && sudo systemctl start bluetooth
 ```
 
-## ☃️ Coolercontrol sleep fix
+---
 
-If fans go crazy after sleep because CoolerControl loses its state, use a systemd sleep hook to restart the daemon on wake.
 
-1. Ensure the systemd sleep directory exists:
-```
-sudo mkdir -p /usr/lib/systemd/system-sleep
-```
-
-2. Create and edit the script:
-```
-sudo nano /usr/lib/systemd/system-sleep/restart-coolercontrol.sh
-``` 
-
-3. Paste the following content into the file, then save and exit:
-
-```
-#!/bin/sh
-if [ "$1" = "post" ]; then
-    systemctl restart coolercontrold
-fi
-```
-
-4. Make the script executable:
-```
-sudo chmod +x /usr/lib/systemd/system-sleep/restart-coolercontrol.sh
-```
-
-5. Test the script manually without sleeping:
-```
-sudo /usr/lib/systemd/system-sleep/restart-coolercontrol.sh post
-```
-
-6. Verify that the service successfully restarted:
-```
-systemctl status coolercontrold
-```
