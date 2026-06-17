@@ -64,6 +64,15 @@
 
 
   # ============================================================
+  # SLEEP
+  # ============================================================
+
+  # Restart CoolerControl on system wake to fix crazy fans
+  powerManagement.resumeCommands = ''
+    ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
+  '';
+
+  # ============================================================
   # HARDWARE
   # ============================================================
 
