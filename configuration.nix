@@ -231,6 +231,11 @@
     # (writeShellScriptBin "obs-convert" (builtins.readFile ./scripts/obs-convert.sh))
   ];
 
+  # ============================================================
+  # BROWSER
+  # ============================================================
+
+  programs.firefox.enable = true;
 
   # ============================================================
   # FLATPAK (Declarative via nix-flatpak)
