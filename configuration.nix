@@ -229,6 +229,13 @@
 
     # Custom scripts
     # (writeShellScriptBin "obs-convert" (builtins.readFile ./scripts/obs-convert.sh))
+
+    # KDE STUFF:
+    kdePackages.kdegraphics-thumbnailers # For images and PDFs
+    kdePackages.ffmpegthumbs             # For video thumbnails
+    kdePackages.taglib                   # For audio files
+
+
   ];
 
   # ============================================================
