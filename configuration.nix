@@ -116,10 +116,35 @@
   # ============================================================
   # DISPLAY / DESKTOP
   # ============================================================
+  # Display manager is shared by both desktop environments below.
+  # SDDM will show a session picker if more than one DE is enabled.
 
-  services.displayManager.sddm.enable       = true;
-  services.desktopManager.plasma6.enable    = true;
+  services.displayManager.sddm.enable = true;
 
+  # ---------------------------------------------------------
+  # KDE PLASMA  (active)
+  # ---------------------------------------------------------
+  services.desktopManager.plasma6.enable = true;
+
+  # ---------------------------------------------------------
+  # GNOME  (commented out — uncomment block below to enable)
+  # ---------------------------------------------------------
+  # services.desktopManager.gnome.enable = true;
+  #
+  # environment.gnome.excludePackages = with pkgs; [
+  #   gnome-tour
+  #   gnome-connections
+  #   epiphany
+  #   geary
+  #   gnome-maps
+  #   gnome-weather
+  #   gnome-contacts
+  #   gnome-music
+  #   gnome-photos
+  #   gnome-software
+  # ];
+
+  # Shared keyboard / font settings (DE-agnostic)
   services.xserver.xkb = {
     layout  = "dk";
     variant = "";
@@ -163,7 +188,14 @@
     description  = "Hjalte";
     shell        = pkgs.zsh;
     extraGroups  = [ "networkmanager" "wheel" "libvirtd" "storage" ];
-    packages     = with pkgs; [ kdePackages.kate ];
+
+    packages = with pkgs; [
+      # ---------------- KDE (active) ----------------
+      kdePackages.kate
+
+      # ---------------- GNOME (commented out) --------
+      # gnome-text-editor
+    ];
   };
 
   # home-manager.users.hjalte = { pkgs, ... }: {
@@ -230,12 +262,19 @@
     # Custom scripts
     # (writeShellScriptBin "obs-convert" (builtins.readFile ./scripts/obs-convert.sh))
 
-    # KDE STUFF:
+    # ---------------------------------------------------------
+    # KDE PACKAGES  (active)
+    # ---------------------------------------------------------
     kdePackages.kdegraphics-thumbnailers # For images and PDFs
     kdePackages.ffmpegthumbs             # For video thumbnails
     kdePackages.taglib                   # For audio files
 
-
+    # ---------------------------------------------------------
+    # GNOME PACKAGES  (commented out — uncomment to enable)
+    # ---------------------------------------------------------
+    # gnome-tweaks
+    # gnome-extension-manager
+    # gnome-shell-extensions
   ];
 
   # ============================================================
