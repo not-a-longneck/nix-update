@@ -25,7 +25,9 @@ flatpak install flathub -y \
   com.valvesoftware.Steam \
   com.obsproject.Studio \
   com.github.tchx84.Flatseal \
-  com.vscodium.codium
+  com.vscodium.codium \
+  org.gnome.World.PikaBackup \
+  io.github.kolunmi.Bazaar
 ```
 
 ---
