@@ -298,12 +298,12 @@
   # SERVICES
   # ============================================================
 
-  services.syncthing = {
-    enable    = true;
-    user      = "hjalte";
-    dataDir   = "/home/hjalte/Documents";
-    configDir = "/home/hjalte/.config/syncthing";
-  };
+  #services.syncthing = {
+  #  enable    = true;
+  #  user      = "hjalte";
+  #  dataDir   = "/home/hjalte/Documents";
+  #  configDir = "/home/hjalte/.config/syncthing";
+  #};
 
   services.printing.enable = true;
 
