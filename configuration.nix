@@ -71,8 +71,8 @@
   powerManagement.resumeCommands = ''
     ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
 
-  # Restart Plasmashell for your user to fix graphical wake bugs
-  ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace &
+    # Restart Plasmashell for your user to fix graphical wake bugs
+    ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace &
   '';  
 
   # ============================================================
