@@ -70,7 +70,10 @@
   # Restart CoolerControl on system wake to fix crazy fans
   powerManagement.resumeCommands = ''
     ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
-  '';
+
+  # Restart Plasmashell for your user to fix graphical wake bugs
+  ${pkgs.sudo}/bin/sudo -u hjalte DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.plasma5Packages.plasmashell}/bin/plasmashell --replace &
+  '';  
 
   # ============================================================
   # HARDWARE
