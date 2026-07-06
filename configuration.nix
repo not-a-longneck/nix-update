@@ -73,7 +73,7 @@
 
     # Restart Plasmashell for your user to fix graphical wake bugs
     ${pkgs.coreutils}/bin/sleep 5
-       ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace > /tmp/plasmashell-resume.log 2>&1 &
+    ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace > /tmp/plasmashell-resume.log 2>&1 &
   '';  
 
   # ============================================================
@@ -105,7 +105,7 @@
   hardware.nvidia = {
     modesetting.enable    = true;
     powerManagement.enable = true;
-    open    = false;
+    open    = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
