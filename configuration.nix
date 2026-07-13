@@ -250,6 +250,7 @@
     whois        # includes mkpasswd
     chafa        # terminal image previews
     mediawriter
+    nodejs
 
     # System / Runtimes / Libraries
     cifs-utils   # Unraid/SMB shares
