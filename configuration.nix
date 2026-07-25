@@ -117,6 +117,21 @@
   };
 
 
+
+  # Protect against hard OOM freezes
+  services.earlyoom = {
+    enable = true;
+    enableNotifications = true;
+    freeMemThreshold = 5; # Kills process when free RAM drops below 5%
+  };
+
+  # Compressed swap in RAM to absorb VRAM spilling
+  zramSwap = {
+    enable = true;
+    priority = 100;
+    memoryPercent = 50;
+  };
+
   # ============================================================
   # DISPLAY / DESKTOP
   # ============================================================
