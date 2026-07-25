@@ -122,7 +122,7 @@
   services.earlyoom = {
     enable = true;
     enableNotifications = true;
-    freeMemThreshold = 2; # Kills process when free RAM drops below 5%
+    freeMemThreshold = 2;       # Kills process when free RAM drops below 2%
     freeSwapThreshold = 2;      # Default: 10%, recommended lowered: 2%
 
     # Tell it to prefer killing specific memory hogs first
