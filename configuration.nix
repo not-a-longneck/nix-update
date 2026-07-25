@@ -171,6 +171,19 @@
   #   gnome-software
   # ];
 
+  # ---------------------------------------------------------
+  # COSMIC (System76)  (commented out — uncomment to enable)
+  # ---------------------------------------------------------
+  # services.desktopManager.cosmic.enable = true;
+  #
+  # # Optional: Use COSMIC's native greeter instead of SDDM
+  # # services.displayManager.cosmic-greeter.enable = true;
+  #
+  # # Optional: Exclude default COSMIC applications
+  # # environment.cosmic.excludePackages = with pkgs; [
+  # #   cosmic-edit
+  # # ];
+
   # Shared keyboard / font settings (DE-agnostic)
   services.xserver.xkb = {
     layout  = "dk";
@@ -178,6 +191,8 @@
   };
 
   fonts.fontDir.enable = true;
+
+  
 
 
   # ============================================================
