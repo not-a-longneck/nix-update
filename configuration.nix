@@ -122,7 +122,14 @@
   services.earlyoom = {
     enable = true;
     enableNotifications = true;
-    freeMemThreshold = 5; # Kills process when free RAM drops below 5%
+    freeMemThreshold = 2; # Kills process when free RAM drops below 5%
+    freeSwapThreshold = 2;      # Default: 10%, recommended lowered: 2%
+
+    # Keep specific apps safe from being killed (e.g., Plasma desktop or critical apps)
+    avoidMemRegex = "(kwin_wayland|plasmashell|systemd)";
+
+    # Tell it to prefer killing specific memory hogs first
+    preferMemRegex = "(steam|chrome|firefox)";
   };
 
   # Compressed swap in RAM to absorb VRAM spilling
