@@ -324,7 +324,7 @@
   # BROWSER
   # ============================================================
 
-  programs.firefox.enable = true;
+  programs.firefox.enable = false;
 
   # ============================================================
   # FLATPAK (Declarative via nix-flatpak)
