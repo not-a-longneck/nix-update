@@ -289,6 +289,8 @@
     chafa        # terminal image previews
     mediawriter
     nodejs
+    python3
+    python3Packages.pip
 
     # System / Runtimes / Libraries
     cifs-utils   # Unraid/SMB shares
