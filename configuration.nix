@@ -200,10 +200,18 @@
   # ============================================================
 
   services.pipewire = {
-    enable           = true;
-    alsa.enable      = true;
+    enable = true;
+    alsa.enable = true;
     alsa.support32Bit = true;
-    pulse.enable     = true;
+    pulse.enable = true;
+    
+    extraConfig.pipewire."92-high-quantum" = {
+      "context.properties" = {
+        "default.clock.quantum" = 2048;
+        "default.clock.min-quantum" = 1024;
+        "default.clock.max-quantum" = 8192;
+      };
+    };
   };
 
   # Reset USB mic on login (vendor: 0d8c, product: 016c)
@@ -219,6 +227,9 @@
       Type      = "oneshot";
     };
   };
+
+
+
 
 
   # ============================================================
