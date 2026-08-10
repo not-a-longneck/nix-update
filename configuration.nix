@@ -95,6 +95,8 @@
   services.fwupd.enable = true;    # Firmware updates
   services.fstrim.enable = true;   # SSD TRIM
 
+  # keychron fix for via
+  hardware.keyboard.qmk.enable = true;
 
   # ============================================================
   # NVIDIA
