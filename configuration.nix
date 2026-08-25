@@ -81,9 +81,17 @@
   # ============================================================
 
   hardware.bluetooth = {
-    enable       = true;
-    powerOnBoot  = true;
-    settings.General.Experimental = true;
+    enable = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        Experimental = true;
+        FastConnectable = true;
+      };
+      Policy = {
+        AutoEnable = true;
+      };
+    };
   };
 
   hardware.graphics = {
@@ -215,6 +223,13 @@
       };
     };
   };
+
+  services.pipewire.wireplumber.extraConfig."50-bluez-fix" = {
+  "monitor.bluez.properties" = {
+    "bluez5.enable-sbc-xq" = true;
+    "bluez5.default.rate" = 48000;
+    };
+  };  
 
   # Reset USB mic on login (vendor: 0d8c, product: 016c)
   services.udev.extraRules = ''
