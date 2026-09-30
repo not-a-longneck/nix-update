@@ -60,7 +60,10 @@
     "acpi_enforce_resources=lax"  # Required for nct6775 fan control
     "nvidia-drm.modeset=1"
     "nvidia-drm.fbdev=1"
+    "xhci_hcd.quirks=270336" # this should fix the USB panic issue
   ];
+
+
 
 
   # ============================================================
