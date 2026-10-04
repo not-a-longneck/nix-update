@@ -61,6 +61,8 @@
     "nvidia-drm.modeset=1"
     "nvidia-drm.fbdev=1"
     "xhci_hcd.quirks=270336" # this should fix the USB panic issue
+    "usbcore.autosuspend=-1" "pcie_aspm=off" #04-10-2026 - USB kernel dies issues
+    
   ];
 
 
