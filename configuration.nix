@@ -236,19 +236,20 @@
     };
   };  
 
-  # Reset USB mic on login (vendor: 0d8c, product: 016c)
-  services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0d8c", ATTR{idProduct}=="016c", MODE="0666", GROUP="audio"
-  '';
-
-  systemd.user.services.reset-usb-mic = {
-    description = "Reset USB Microphone on login";
-    wantedBy    = [ "graphical-session.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/sleep 10; ${pkgs.usbutils}/bin/usbreset 0d8c:016c'";
-      Type      = "oneshot";
-    };
-  };
+#### NOT NEEDED ANYMORE:
+## Reset USB mic on login (vendor: 0d8c, product: 016c)
+#  services.udev.extraRules = ''
+#    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0d8c", ATTR{idProduct}=="016c", MODE="0666", GROUP="audio"
+#  '';
+#
+#  systemd.user.services.reset-usb-mic = {
+#    description = "Reset USB Microphone on login";
+#    wantedBy    = [ "graphical-session.target" ];
+#    serviceConfig = {
+#      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/sleep 10; ${pkgs.usbutils}/bin/usbreset 0d8c:016c'";
+#      Type      = "oneshot";
+#    };
+#  };
 
 
 
