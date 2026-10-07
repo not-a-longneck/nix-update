@@ -60,9 +60,8 @@
     "acpi_enforce_resources=lax"  # Required for nct6775 fan control
     "nvidia-drm.modeset=1"
     "nvidia-drm.fbdev=1"
-    "xhci_hcd.quirks=270336" # this should fix the USB panic issue
+    "xhci_hcd.quirks=270464"      # your old 270336 + 128 (RESET_ON_RESUME)
     "usbcore.autosuspend=-1" "pcie_aspm=off" #04-10-2026 - USB kernel dies issues
-    
   ];
 
 
@@ -72,14 +71,35 @@
   # SLEEP
   # ============================================================
 
+  # Detach the chipset xHCI (01:00.0) before sleep so its broken
+  # save/restore never runs. Keyboard/mouse are on the CPU controller (09:00.3).
+  powerManagement.powerDownCommands = ''
+    if [ -e /sys/bus/pci/drivers/xhci_hcd/0000:01:00.0 ]; then
+      echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/unbind || true
+    fi
+  '';
+
   # Restart CoolerControl on system wake to fix crazy fans
   powerManagement.resumeCommands = ''
     ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
+
+    # Re-probe the chipset xHCI; fall back to remove + rescan if bind fails
+    echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/bind || true
+    if [ ! -e /sys/bus/pci/drivers/xhci_hcd/0000:01:00.0 ]; then
+      echo 1 > /sys/bus/pci/devices/0000:01:00.0/remove || true
+      echo 1 > /sys/bus/pci/rescan
+    fi
 
     # Restart Plasmashell for your user to fix graphical wake bugs
     ${pkgs.coreutils}/bin/sleep 5
     ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace > /tmp/plasmashell-resume.log 2>&1 &
   '';  
+
+
+
+
+
+
 
   # ============================================================
   # HARDWARE
