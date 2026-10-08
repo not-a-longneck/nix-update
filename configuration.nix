@@ -16,245 +16,245 @@
   ];
 
 
-  # ============================================================
-  # SYSTEM
-  # ============================================================
+# ============================================================
+# SYSTEM
+# ============================================================
 
-  # NixOS version — do not change unless you know what you're doing
-  system.stateVersion = "25.11";
+# NixOS version — do not change unless you know what you're doing
+system.stateVersion = "25.11";
 
-  networking.hostName = "nixos";
-  networking.networkmanager.enable = true;
+networking.hostName = "nixos";
+networking.networkmanager.enable = true;
 
-  time.timeZone = "Europe/Copenhagen";
+time.timeZone = "Europe/Copenhagen";
 
-  i18n.defaultLocale = "en_DK.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS        = "da_DK.UTF-8";
-    LC_IDENTIFICATION = "da_DK.UTF-8";
-    LC_MEASUREMENT    = "da_DK.UTF-8";
-    LC_MONETARY       = "da_DK.UTF-8";
-    LC_NAME           = "da_DK.UTF-8";
-    LC_NUMERIC        = "da_DK.UTF-8";
-    LC_PAPER          = "da_DK.UTF-8";
-    LC_TELEPHONE      = "da_DK.UTF-8";
-    LC_TIME           = "da_DK.UTF-8";
-  };
+i18n.defaultLocale = "en_DK.UTF-8";
+i18n.extraLocaleSettings = {
+  LC_ADDRESS        = "da_DK.UTF-8";
+  LC_IDENTIFICATION = "da_DK.UTF-8";
+  LC_MEASUREMENT    = "da_DK.UTF-8";
+  LC_MONETARY       = "da_DK.UTF-8";
+  LC_NAME           = "da_DK.UTF-8";
+  LC_NUMERIC        = "da_DK.UTF-8";
+  LC_PAPER          = "da_DK.UTF-8";
+  LC_TELEPHONE      = "da_DK.UTF-8";
+  LC_TIME           = "da_DK.UTF-8";
+};
 
-  nixpkgs.config.allowUnfree = true;
-
-
-  # ============================================================
-  # BOOT
-  # ============================================================
-
-  boot.loader.systemd-boot.enable    = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.kernelPackages = pkgs.linuxPackages;
-
-  # kvm-amd: virtualization; nct6775: fan control via CoolerControl
-  boot.kernelModules = [ "kvm-amd" "nct6775" ];
-
-  boot.kernelParams = [
-    "acpi_enforce_resources=lax"  # Required for nct6775 fan control
-    "nvidia-drm.modeset=1"
-    "nvidia-drm.fbdev=1"
-    "xhci_hcd.quirks=270464"      # your old 270336 + 128 (RESET_ON_RESUME)
-    "usbcore.autosuspend=-1" "pcie_aspm=off" #04-10-2026 - USB kernel dies issues
-  ];
+nixpkgs.config.allowUnfree = true;
 
 
+# ============================================================
+# BOOT
+# ============================================================
+
+boot.loader.systemd-boot.enable    = true;
+boot.loader.efi.canTouchEfiVariables = true;
+
+boot.kernelPackages = pkgs.linuxPackages;
+
+# kvm-amd: virtualization; nct6775: fan control via CoolerControl
+boot.kernelModules = [ "kvm-amd" "nct6775" ];
+
+boot.kernelParams = [
+  "acpi_enforce_resources=lax"  # Required for nct6775 fan control
+  "nvidia-drm.modeset=1"
+  "nvidia-drm.fbdev=1"
+  "xhci_hcd.quirks=270464"      # your old 270336 + 128 (RESET_ON_RESUME)
+  "usbcore.autosuspend=-1" "pcie_aspm=off" #04-10-2026 - USB kernel dies issues
+];
 
 
-  # ============================================================
-  # SLEEP
-  # ============================================================
-
-  # Detach the chipset xHCI (01:00.0) before sleep so its broken
-  # save/restore never runs. Keyboard/mouse are on the CPU controller (09:00.3).
-  powerManagement.powerDownCommands = ''
-    if [ -e /sys/bus/pci/drivers/xhci_hcd/0000:01:00.0 ]; then
-      echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/unbind || true
-    fi
-  '';
-
-  # Restart CoolerControl on system wake to fix crazy fans
-  powerManagement.resumeCommands = ''
-    ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
-
-    # Re-probe the chipset xHCI; fall back to remove + rescan if bind fails
-    echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/bind || true
-    if [ ! -e /sys/bus/pci/drivers/xhci_hcd/0000:01:00.0 ]; then
-      echo 1 > /sys/bus/pci/devices/0000:01:00.0/remove || true
-      echo 1 > /sys/bus/pci/rescan
-    fi
-
-    # Restart Plasmashell for your user to fix graphical wake bugs
-    ${pkgs.coreutils}/bin/sleep 5
-    ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace > /tmp/plasmashell-resume.log 2>&1 &
-  '';  
 
 
+# ============================================================
+# SLEEP
+# ============================================================
+
+# Detach the chipset xHCI (01:00.0) before sleep so its broken
+# save/restore never runs. Keyboard/mouse are on the CPU controller (09:00.3).
+powerManagement.powerDownCommands = ''
+  if [ -e /sys/bus/pci/drivers/xhci_hcd/0000:01:00.0 ]; then
+    echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/unbind || true
+  fi
+'';
+
+# Restart CoolerControl on system wake to fix crazy fans
+powerManagement.resumeCommands = ''
+  ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
+
+  # Re-probe the chipset xHCI; fall back to remove + rescan if bind fails
+  echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/bind || true
+  if [ ! -e /sys/bus/pci/drivers/xhci_hcd/0000:01:00.0 ]; then
+    echo 1 > /sys/bus/pci/devices/0000:01:00.0/remove || true
+    echo 1 > /sys/bus/pci/rescan
+  fi
+
+  # Restart Plasmashell for your user to fix graphical wake bugs
+  ${pkgs.coreutils}/bin/sleep 5
+  ${pkgs.sudo}/bin/sudo -u hjalte WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace > /tmp/plasmashell-resume.log 2>&1 &
+'';  
 
 
 
 
 
-  # ============================================================
-  # HARDWARE
-  # ============================================================
 
-  hardware.bluetooth = {
-    enable = true;
-    settings = {
-      General = {
-        Enable = "Source,Sink,Media,Socket";
-        Experimental = true;
-        FastConnectable = true;
-      };
-      Policy = {
-        AutoEnable = true;
-      };
+
+# ============================================================
+# HARDWARE
+# ============================================================
+
+hardware.bluetooth = {
+  enable = true;
+  settings = {
+    General = {
+      Enable = "Source,Sink,Media,Socket";
+      Experimental = true;
+      FastConnectable = true;
+    };
+    Policy = {
+      AutoEnable = true;
     };
   };
+};
 
-  hardware.graphics = {
-    enable      = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [ nvidia-vaapi-driver ];
-  };
+hardware.graphics = {
+  enable      = true;
+  enable32Bit = true;
+  extraPackages = with pkgs; [ nvidia-vaapi-driver ];
+};
 
-  services.fwupd.enable = true;    # Firmware updates
-  services.fstrim.enable = true;   # SSD TRIM
+services.fwupd.enable = true;    # Firmware updates
+services.fstrim.enable = true;   # SSD TRIM
 
-  # keychron fix for via
-  hardware.keyboard.qmk.enable = true;
+# keychron fix for via
+hardware.keyboard.qmk.enable = true;
 
-  # ============================================================
-  # NVIDIA
-  # ============================================================
+# ============================================================
+# NVIDIA
+# ============================================================
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+services.xserver.videoDrivers = [ "nvidia" ];
 
-  hardware.nvidia = {
-    modesetting.enable    = true;
-    powerManagement.enable = true;
-    open    = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
+hardware.nvidia = {
+  modesetting.enable    = true;
+  powerManagement.enable = true;
+  open    = true;
+  package = config.boot.kernelPackages.nvidiaPackages.stable;
+};
 
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL          = "1";         # Hint Electron apps to use Wayland
-    GBM_BACKEND             = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    LIBVA_DRIVER_NAME       = "nvidia";
-  };
+environment.sessionVariables = {
+  NIXOS_OZONE_WL          = "1";         # Hint Electron apps to use Wayland
+  GBM_BACKEND             = "nvidia-drm";
+  __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  LIBVA_DRIVER_NAME       = "nvidia";
+};
 
 
 
-  # Protect against hard OOM freezes
-  services.earlyoom = {
-    enable = true;
-    enableNotifications = true;
-    freeMemThreshold = 2;       # Kills process when free RAM drops below 2%
-    freeSwapThreshold = 2;      # Default: 10%, recommended lowered: 2%
+# Protect against hard OOM freezes
+services.earlyoom = {
+  enable = true;
+  enableNotifications = true;
+  freeMemThreshold = 2;       # Kills process when free RAM drops below 2%
+  freeSwapThreshold = 2;      # Default: 10%, recommended lowered: 2%
 
-    # Tell it to prefer killing specific memory hogs first
-    extraArgs = [
-      "--avoid" "(kwin_wayland|plasmashell|systemd)"
-      "--prefer" "(firefox)"
-    ];
+  # Tell it to prefer killing specific memory hogs first
+  extraArgs = [
+    "--avoid" "(kwin_wayland|plasmashell|systemd)"
+    "--prefer" "(firefox)"
+  ];
 
-  };
+};
 
-  # Compressed swap in RAM to absorb VRAM spilling
-  zramSwap = {
-    enable = true;
-    priority = 100;
-    memoryPercent = 50;
-  };
+# Compressed swap in RAM to absorb VRAM spilling
+zramSwap = {
+  enable = true;
+  priority = 100;
+  memoryPercent = 50;
+};
 
-  # ============================================================
-  # DISPLAY / DESKTOP
-  # ============================================================
-  # Display manager is shared by both desktop environments below.
-  # SDDM will show a session picker if more than one DE is enabled.
+# ============================================================
+# DISPLAY / DESKTOP
+# ============================================================
+# Display manager is shared by both desktop environments below.
+# SDDM will show a session picker if more than one DE is enabled.
 
-  services.displayManager.sddm.enable = true;
+services.displayManager.sddm.enable = true;
 
-  # ---------------------------------------------------------
-  # KDE PLASMA  (active)
-  # ---------------------------------------------------------
-  services.desktopManager.plasma6.enable = true;
+# ---------------------------------------------------------
+# KDE PLASMA  (active)
+# ---------------------------------------------------------
+services.desktopManager.plasma6.enable = true;
 
-  # ---------------------------------------------------------
-  # GNOME  (commented out — uncomment block below to enable)
-  # ---------------------------------------------------------
-  # services.desktopManager.gnome.enable = true;
-  #
-  # environment.gnome.excludePackages = with pkgs; [
-  #   gnome-tour
-  #   gnome-connections
-  #   epiphany
-  #   geary
-  #   gnome-maps
-  #   gnome-weather
-  #   gnome-contacts
-  #   gnome-music
-  #   gnome-photos
-  #   gnome-software
-  # ];
+# ---------------------------------------------------------
+# GNOME  (commented out — uncomment block below to enable)
+# ---------------------------------------------------------
+# services.desktopManager.gnome.enable = true;
+#
+# environment.gnome.excludePackages = with pkgs; [
+#   gnome-tour
+#   gnome-connections
+#   epiphany
+#   geary
+#   gnome-maps
+#   gnome-weather
+#   gnome-contacts
+#   gnome-music
+#   gnome-photos
+#   gnome-software
+# ];
 
-  # ---------------------------------------------------------
-  # COSMIC (System76)  (commented out — uncomment to enable)
-  # ---------------------------------------------------------
-  # services.desktopManager.cosmic.enable = true;
-  #
-  # # Optional: Use COSMIC's native greeter instead of SDDM
-  # # services.displayManager.cosmic-greeter.enable = true;
-  #
-  # # Optional: Exclude default COSMIC applications
-  # # environment.cosmic.excludePackages = with pkgs; [
-  # #   cosmic-edit
-  # # ];
+# ---------------------------------------------------------
+# COSMIC (System76)  (commented out — uncomment to enable)
+# ---------------------------------------------------------
+# services.desktopManager.cosmic.enable = true;
+#
+# # Optional: Use COSMIC's native greeter instead of SDDM
+# # services.displayManager.cosmic-greeter.enable = true;
+#
+# # Optional: Exclude default COSMIC applications
+# # environment.cosmic.excludePackages = with pkgs; [
+# #   cosmic-edit
+# # ];
 
-  # Shared keyboard / font settings (DE-agnostic)
-  services.xserver.xkb = {
-    layout  = "dk";
-    variant = "";
-  };
+# Shared keyboard / font settings (DE-agnostic)
+services.xserver.xkb = {
+  layout  = "dk";
+  variant = "";
+};
 
-  fonts.fontDir.enable = true;
+fonts.fontDir.enable = true;
 
   
 
 
-  # ============================================================
-  # AUDIO (PipeWire)
-  # ============================================================
+# ============================================================
+# AUDIO (PipeWire)
+# ============================================================
 
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    
-    extraConfig.pipewire."92-high-quantum" = {
-      "context.properties" = {
-        "default.clock.quantum" = 2048;
-        "default.clock.min-quantum" = 1024;
-        "default.clock.max-quantum" = 8192;
-      };
+services.pipewire = {
+  enable = true;
+  alsa.enable = true;
+  alsa.support32Bit = true;
+  pulse.enable = true;
+  
+  extraConfig.pipewire."92-high-quantum" = {
+    "context.properties" = {
+      "default.clock.quantum" = 2048;
+      "default.clock.min-quantum" = 1024;
+      "default.clock.max-quantum" = 8192;
     };
   };
+};
 
-  services.pipewire.wireplumber.extraConfig."50-bluez-fix" = {
-  "monitor.bluez.properties" = {
-    "bluez5.enable-sbc-xq" = true;
-    "bluez5.default.rate" = 48000;
-    };
-  };  
+services.pipewire.wireplumber.extraConfig."50-bluez-fix" = {
+"monitor.bluez.properties" = {
+  "bluez5.enable-sbc-xq" = true;
+  "bluez5.default.rate" = 48000;
+  };
+};  
 
 #### NOT NEEDED ANYMORE:
 ## Reset USB mic on login (vendor: 0d8c, product: 016c)
@@ -275,91 +275,91 @@
 
 
 
-  # ============================================================
-  # USERS
-  # ============================================================
+# ============================================================
+# USERS
+# ============================================================
 
-  users.users.hjalte = {
-    isNormalUser = true;
-    description  = "Hjalte";
-    shell        = pkgs.zsh;
-    extraGroups  = [ "networkmanager" "wheel" "libvirtd" "storage" ];
+users.users.hjalte = {
+  isNormalUser = true;
+  description  = "Hjalte";
+  shell        = pkgs.zsh;
+  extraGroups  = [ "networkmanager" "wheel" "libvirtd" "storage" ];
 
-    packages = with pkgs; [
-      # ---------------- KDE (active) ----------------
-      kdePackages.kate
+  packages = with pkgs; [
+    # ---------------- KDE (active) ----------------
+    kdePackages.kate
 
-      # ---------------- GNOME (commented out) --------
-      # gnome-text-editor
-    ];
+    # ---------------- GNOME (commented out) --------
+    # gnome-text-editor
+  ];
+};
+
+# home-manager.users.hjalte = { pkgs, ... }: {
+#   imports = [ ./plasma.nix ];
+#   home.stateVersion = "25.11";
+# };
+
+
+# ============================================================
+# SHELL (ZSH)
+# ============================================================
+
+programs.zsh = {
+  enable                  = true;
+  autosuggestions.enable  = true;
+  syntaxHighlighting.enable = true;
+  ohMyZsh = {
+    enable = true;
+    theme  = "robbyrussell";
   };
-
-  # home-manager.users.hjalte = { pkgs, ... }: {
-  #   imports = [ ./plasma.nix ];
-  #   home.stateVersion = "25.11";
-  # };
+};
 
 
-  # ============================================================
-  # SHELL (ZSH)
-  # ============================================================
+# ============================================================
+# SYSTEM PACKAGES
+# ============================================================
 
-  programs.zsh = {
-    enable                  = true;
-    autosuggestions.enable  = true;
-    syntaxHighlighting.enable = true;
-    ohMyZsh = {
-      enable = true;
-      theme  = "robbyrussell";
-    };
-  };
+environment.systemPackages = with pkgs; [
+  # CLI / Utilities
+  libnotify
+  git
+  github-cli
+  usbutils
+  wget
+  curl
+  htop
+  btop
+  nvtopPackages.full
+  fastfetch
+  ripgrep
+  eza
+  bat
+  nh
+  nix-output-monitor
+  parted
+  gparted
+  cryptsetup
+  whois        # includes mkpasswd
+  chafa        # terminal image previews
+  mediawriter
+  nodejs
+  python3
+  python3Packages.pip
 
+  # System / Runtimes / Libraries
+  cifs-utils   # Unraid/SMB shares
+  libvlc
+  ffmpeg-full
+  swtpm
+  virt-viewer
 
-  # ============================================================
-  # SYSTEM PACKAGES
-  # ============================================================
+  # Formatters
+  prettier
+  black
+  nixpkgs-fmt
 
-  environment.systemPackages = with pkgs; [
-    # CLI / Utilities
-    libnotify
-    git
-    github-cli
-    usbutils
-    wget
-    curl
-    htop
-    btop
-    nvtopPackages.full
-    fastfetch
-    ripgrep
-    eza
-    bat
-    nh
-    nix-output-monitor
-    parted
-    gparted
-    cryptsetup
-    whois        # includes mkpasswd
-    chafa        # terminal image previews
-    mediawriter
-    nodejs
-    python3
-    python3Packages.pip
-
-    # System / Runtimes / Libraries
-    cifs-utils   # Unraid/SMB shares
-    libvlc
-    ffmpeg-full
-    swtpm
-    virt-viewer
-
-    # Formatters
-    prettier
-    black
-    nixpkgs-fmt
-
-    # Custom scripts
-    # (writeShellScriptBin "obs-convert" (builtins.readFile ./scripts/obs-convert.sh))
+  # Custom scripts
+  # (writeShellScriptBin "obs-convert" (builtins.readFile ./scripts/obs-convert.sh))
 
     # ---------------------------------------------------------
     # KDE PACKAGES  (active)
@@ -367,7 +367,7 @@
     kdePackages.kdegraphics-thumbnailers # For images and PDFs
     kdePackages.ffmpegthumbs             # For video thumbnails
     kdePackages.taglib                   # For audio files
-
+    
     # ---------------------------------------------------------
     # GNOME PACKAGES  (commented out — uncomment to enable)
     # ---------------------------------------------------------
