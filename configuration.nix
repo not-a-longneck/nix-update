@@ -345,6 +345,7 @@ environment.systemPackages = with pkgs; [
   nodejs
   python3
   python3Packages.pip
+  yt-dlp 
 
   # System / Runtimes / Libraries
   cifs-utils   # Unraid/SMB shares
