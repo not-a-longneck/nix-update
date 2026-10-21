@@ -346,6 +346,7 @@ environment.systemPackages = with pkgs; [
   python3
   python3Packages.pip
   yt-dlp 
+  imagemagick
 
   # System / Runtimes / Libraries
   cifs-utils   # Unraid/SMB shares
