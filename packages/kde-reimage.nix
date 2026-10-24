@@ -7,7 +7,7 @@ let
 
     src = builtins.fetchGit {
       url = "https://github.com/giuseppebenigno/kde-service-menu-reimage";
-      ref = "master";
+      ref = "main";
     };
 
     nativeBuildInputs = [ pkgs.makeWrapper ];
