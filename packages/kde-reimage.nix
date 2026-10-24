@@ -5,12 +5,10 @@ let
     pname = "kde-service-menu-reimage";
     version = "latest";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "giuseppebenigno";
-      repo = "kde-service-menu-reimage";
-      rev = "master"; 
-      hash = pkgs.lib.fakeHash; # Replace with actual hash after first run
-    };
+    src = builtins.fetchGit {
+          url = "https://github.com/giuseppebenigno/kde-service-menu-reimage.git";
+          ref = "master";
+        };
 
     propagatedBuildInputs = with pkgs; [
       imagemagick
