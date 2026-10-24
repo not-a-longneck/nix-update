@@ -6,30 +6,33 @@ let
     version = "latest";
 
     src = builtins.fetchGit {
-          url = "https://github.com/giuseppebenigno/kde-service-menu-reimage.git";
-          ref = "master";
-        };
+      url = "https://github.com/giuseppebenigno/kde-service-menu-reimage";
+      ref = "master";
+    };
 
-    propagatedBuildInputs = with pkgs; [
-      imagemagick
-      jhead
-      exiftool
-      kdePackages.kdialog
-    ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    dontBuild = true;
+    dontConfigure = true;
 
     installPhase = ''
-      mkdir -p $out/bin
-      mkdir -p $out/share/kio/servicemenus
-
+      runHook preInstall
+      mkdir -p $out/bin $out/share/kio/servicemenus
       cp bin/* $out/bin/
       cp servicemenus/*.desktop $out/share/kio/servicemenus/
+      chmod +x $out/bin/* $out/share/kio/servicemenus/*.desktop
+      sed -i "s|~/.local/bin/|$out/bin/|g" $out/share/kio/servicemenus/*.desktop
+      runHook postInstall
+    '';
 
-      chmod +x $out/bin/*
-      sed -i 's|~/.local/bin/||g' $out/share/kio/servicemenus/*.desktop
+    postFixup = ''
+      for f in $out/bin/*; do
+        wrapProgram "$f" --prefix PATH : ${pkgs.lib.makeBinPath (with pkgs; [
+          imagemagick jhead exiftool kdePackages.kdialog
+        ])}
+      done
     '';
   };
 in
 {
-  # This makes it a valid NixOS module
   environment.systemPackages = [ kde-reimage ];
 }
