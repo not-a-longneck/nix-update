@@ -8,6 +8,10 @@
   imports = [
     ./hardware-configuration.nix
     ./scripts/nix-update.nix
+
+    # custom packages
+    ./packages/kde-reimage.nix
+
     # <home-manager/nixos>
     "${(builtins.fetchTarball {
       url = "https://github.com/gmodena/nix-flatpak/archive/refs/tags/v0.6.0.tar.gz";
