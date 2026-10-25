@@ -8,6 +8,7 @@ let
   filesToSync = [
     "configuration.nix"
     "scripts/nix-update.nix"
+    "packages/kde-reimage.nix"  
   ];
 in
 {
