@@ -85,7 +85,7 @@ powerManagement.powerDownCommands = ''
 
 # Restart CoolerControl on system wake to fix crazy fans
 powerManagement.resumeCommands = ''
-  ${pkgs.systemd}/bin/systemctl restart coolercontrold.service
+ (${pkgs.coreutils}/bin/sleep 15 && ${pkgs.systemd}/bin/systemctl restart coolercontrold.service) &
 
   # Re-probe the chipset xHCI; fall back to remove + rescan if bind fails
   echo 0000:01:00.0 > /sys/bus/pci/drivers/xhci_hcd/bind || true
