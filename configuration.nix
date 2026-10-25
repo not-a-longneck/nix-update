@@ -312,7 +312,7 @@ users.users.hjalte = {
 
 programs.zsh = {
   enable                  = true;
-  autosuggestions.enable  = true;
+  autosuggestions.enable  = false;
   syntaxHighlighting.enable = true;
   ohMyZsh = {
     enable = true;
