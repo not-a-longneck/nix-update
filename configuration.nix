@@ -139,7 +139,7 @@ services.fstrim.enable = true;   # SSD TRIM
 hardware.keyboard.qmk.enable = true;
 
 # Logs hardware issues
-services.rasdaemon.enable = true;
+hardware.rasdaemon.enable = true;
 
 # ============================================================
 # NVIDIA
