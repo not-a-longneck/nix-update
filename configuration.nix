@@ -138,6 +138,9 @@ services.fstrim.enable = true;   # SSD TRIM
 # keychron fix for via
 hardware.keyboard.qmk.enable = true;
 
+# Logs hardware issues
+services.rasdaemon.enable = true;
+
 # ============================================================
 # NVIDIA
 # ============================================================
