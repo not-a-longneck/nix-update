@@ -152,7 +152,7 @@ hardware.nvidia = {
   powerManagement.enable = true;
   open    = true;
   package = config.boot.kernelPackages.nvidiaPackages.stable;
-  persistenceMode = true;
+  nvidiaPersistenced = true;
 };
 
 environment.sessionVariables = {
