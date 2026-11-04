@@ -152,6 +152,7 @@ hardware.nvidia = {
   powerManagement.enable = true;
   open    = true;
   package = config.boot.kernelPackages.nvidiaPackages.stable;
+  persistenceMode = true;
 };
 
 environment.sessionVariables = {
@@ -161,6 +162,15 @@ environment.sessionVariables = {
   LIBVA_DRIVER_NAME       = "nvidia";
 };
 
+# Run nvidia-smi -pl 180 on boot
+systemd.services.nvidia-power-limit = {
+  description = "Set NVIDIA RTX 3070 Power Limit to 180W";
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "${config.hardware.nvidia.package}/bin/nvidia-smi -pl 180";
+  };
+};
 
 
 # Protect against hard OOM freezes
