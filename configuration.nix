@@ -148,30 +148,31 @@ hardware.rasdaemon.enable = true;
 services.xserver.videoDrivers = [ "nvidia" ];
 
 hardware.nvidia = {
-  modesetting.enable    = true;
+  modesetting.enable     = true;
   powerManagement.enable = true;
-  open    = true;
-  package = config.boot.kernelPackages.nvidiaPackages.stable;
-  nvidiaPersistenced = true;
+  open                   = true;
+  package                = config.boot.kernelPackages.nvidiaPackages.stable;
+  nvidiaPersistenced     = true;
 };
 
 environment.sessionVariables = {
-  NIXOS_OZONE_WL          = "1";         # Hint Electron apps to use Wayland
-  GBM_BACKEND             = "nvidia-drm";
+  NIXOS_OZONE_WL            = "1";         # Hint Electron apps to use Wayland
+  GBM_BACKEND               = "nvidia-drm";
   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  LIBVA_DRIVER_NAME       = "nvidia";
+  LIBVA_DRIVER_NAME         = "nvidia";
 };
 
 # Run nvidia-smi -pl 180 on boot
 systemd.services.nvidia-power-limit = {
   description = "Set NVIDIA RTX 3070 Power Limit to 180W";
   wantedBy = [ "multi-user.target" ];
+  after = [ "nvidia-persistenced.service" ];
+  wants = [ "nvidia-persistenced.service" ];
   serviceConfig = {
     Type = "oneshot";
-    ExecStart = "${config.hardware.nvidia.package}/bin/nvidia-smi -pl 180";
+    ExecStart = "${config.hardware.nvidia.package.bin}/bin/nvidia-smi -pl 180";
   };
 };
-
 
 # Protect against hard OOM freezes
 services.earlyoom = {
@@ -185,7 +186,6 @@ services.earlyoom = {
     "--avoid" "(kwin_wayland|plasmashell|systemd)"
     "--prefer" "(firefox)"
   ];
-
 };
 
 # Compressed swap in RAM to absorb VRAM spilling
