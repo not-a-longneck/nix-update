@@ -162,15 +162,15 @@ environment.sessionVariables = {
   LIBVA_DRIVER_NAME         = "nvidia";
 };
 
-# Run nvidia-smi -pl 180 on boot
+# Run nvidia-smi -pl 140 on boot
 systemd.services.nvidia-power-limit = {
-  description = "Set NVIDIA RTX 3070 Power Limit to 180W";
+  description = "Set NVIDIA RTX 3070 Power Limit to 140W";
   wantedBy = [ "multi-user.target" ];
   after = [ "nvidia-persistenced.service" ];
   wants = [ "nvidia-persistenced.service" ];
   serviceConfig = {
     Type = "oneshot";
-    ExecStart = "${config.hardware.nvidia.package.bin}/bin/nvidia-smi -pl 180";
+    ExecStart = "${config.hardware.nvidia.package.bin}/bin/nvidia-smi -pl 140";
   };
 };
 
