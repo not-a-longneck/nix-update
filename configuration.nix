@@ -361,16 +361,12 @@ environment.systemPackages = with pkgs; [
   cryptsetup
   whois        # includes mkpasswd
   chafa        # terminal image previews
-  mediawriter
   nodejs
   python3
   python3Packages.pip
   yt-dlp 
   imagemagick
   openssl 
-
-  # APPS
-  fluent-reader
 
   # System / Runtimes / Libraries
   cifs-utils   # Unraid/SMB shares
