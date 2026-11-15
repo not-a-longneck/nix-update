@@ -10,6 +10,8 @@
   imports = [
     ./hardware-configuration.nix
     ./scripts/nix-update.nix
+    ./modules/apps.nix
+    ./modules/cli-apps.nix
 
     # custom packages
     ./packages/kde-reimage.nix
