@@ -367,7 +367,10 @@ environment.systemPackages = with pkgs; [
   python3Packages.pip
   yt-dlp 
   imagemagick
-  openssl  
+  openssl 
+
+  # APPS
+  fluent-reader
 
   # System / Runtimes / Libraries
   cifs-utils   # Unraid/SMB shares
