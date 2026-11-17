@@ -1,66 +1,62 @@
 { config, pkgs, ... }:
-{  
+{
   environment.systemPackages = with pkgs; [
     ### GUI Apps
     fluent-reader
     mediawriter
 
     ### CLI / Utilities
-    libnotify
+    bat
+    btop
+    chafa          # terminal image previews
+    cryptsetup
+    curl
+    eza
+    fastfetch
     git
     github-cli
-    usbutils
-    wget
-    curl
+    gparted
     htop
-    btop
-    nvtopPackages.full
-    fastfetch
-    ripgrep
-    eza
-    bat
+    imagemagick
+    libnotify
     nh
     nix-output-monitor
-    parted
-    gparted
-    cryptsetup
-    whois        # includes mkpasswd
-    chafa        # terminal image previews
     nodejs
+    nvtopPackages.full
+    openssl
+    parted
     python3
     python3Packages.pip
-    yt-dlp 
-    imagemagick
-    openssl 
-  
+    ripgrep
+    rsync
+    usbutils
+    wget
+    whois          # includes mkpasswd
+    yt-dlp
+
     ### System / Runtimes / Libraries
-    cifs-utils   # Unraid/SMB shares
-    libvlc
+    cifs-utils     # Unraid/SMB shares
     ffmpeg-full
+    libvlc
     swtpm
     virt-viewer
-  
+
     ### Formatters
-    prettier
     black
     nixpkgs-fmt
-  
-    # Custom scripts
+    prettier
+
+    ### KDE
+    kdePackages.ffmpegthumbs             # video thumbnails
+    kdePackages.kdegraphics-thumbnailers # image and PDF thumbnails
+    kdePackages.taglib                   # audio file metadata
+
+    ### Custom scripts
     # (writeShellScriptBin "obs-convert" (builtins.readFile ./scripts/obs-convert.sh))
-  
-    # ---------------------------------------------------------
-    # KDE PACKAGES  (active)
-    # ---------------------------------------------------------
-    kdePackages.kdegraphics-thumbnailers # For images and PDFs
-    kdePackages.ffmpegthumbs             # For video thumbnails
-    kdePackages.taglib                   # For audio files
-    
-    # ---------------------------------------------------------
-    # GNOME PACKAGES  (commented out — uncomment to enable)
-    # ---------------------------------------------------------
-    # gnome-tweaks
+
+    ### GNOME (commented out, uncomment to enable)
     # gnome-extension-manager
     # gnome-shell-extensions
-  
+    # gnome-tweaks
   ];
 }
