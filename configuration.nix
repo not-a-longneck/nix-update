@@ -449,6 +449,17 @@ programs.zsh = {
     });
   '';
 
+fileSystems."/mnt/samsung_1gb_usb" = {
+  device = "/dev/disk/by-uuid/160b8a00-8711-418d-9b58-45124cf616aa";
+  fsType = "ext4";
+  options = [
+    "nofail"
+    "x-systemd.automount"
+    "x-systemd.device-timeout=5s"
+    "noatime"
+  ];
+};
+
 
   # ============================================================
   # MAINTENANCE
