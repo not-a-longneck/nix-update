@@ -29,7 +29,7 @@
     python3Packages.pip
     ripgrep
     rsync
-    tldr
+    tealdeer
     usbutils
     wget
     whois          # includes mkpasswd
