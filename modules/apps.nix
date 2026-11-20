@@ -29,6 +29,7 @@
     python3Packages.pip
     ripgrep
     rsync
+    tldr
     usbutils
     wget
     whois          # includes mkpasswd
