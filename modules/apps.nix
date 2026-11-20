@@ -29,7 +29,8 @@
     python3Packages.pip
     ripgrep
     rsync
-    tealdeer
+    tealdeer # tldr tool
+    superfile # file manager for cli
     usbutils
     wget
     whois          # includes mkpasswd
